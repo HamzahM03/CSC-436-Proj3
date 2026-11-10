@@ -26,11 +26,12 @@ function App() {
 
 
   return (
-    <div>
+    <div className="app">
       <h1>Character Explorer</h1>
 
-      <label>
+      <label className="error-toggle">
         <input
+          className="search-input"
           type="checkbox"
           checked={simulateError}
           onChange={(e) => setSimulateError(e.target.checked)}
@@ -44,13 +45,13 @@ function App() {
         {
         loading ? 
         (
-          <p>Loading Characters...</p>
+          <p className="status-message">Loading Characters...</p>
         ) 
         : error ? 
         (
-          <div>
-            <p role="alert">Error: {error}</p>
-            <button onClick={retry}>Retry</button>
+          <div className="status-message">
+            <p className="error-message" role="alert">Error: {error}</p>
+            <button className="retry-button" onClick={retry}>Retry</button>
           </div>
         ) : 
         (
