@@ -1,41 +1,20 @@
 import { useState, useEffect } from 'react';
+import useFetch from './hooks/useFetch';
 import CharacterCard from './components/CharacterCard';
 import './App.css';
 
 
+
 function App() {
   const [search, setSearch] = useState('');
-  const [characters, setCharacters] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  const { data, loading, error } = useFetch(
+  "https://rickandmortyapi.com/api/character"
+);
+
+  const characters = data?.results ?? [];
   
-  useEffect(() => {
-    async function getCharacters() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const res = await fetch("https://rickandmortyapi.com/api/character");
-
-        if (!res.ok){
-          throw new Error("Failed to fetch characters.");
-        }
-
-        const data = await res.json();
-        setCharacters(data.results);
-
-      } catch (err){
-        setError(err.message);
-
-      } finally {
-        setLoading(false);
-
-      }
-      
-    }
-
-      getCharacters();
-  }, []);
+  
 
   const filteredCharacters = characters.filter((character) =>
      character.name.toLowerCase().includes(search.trim().toLowerCase())
