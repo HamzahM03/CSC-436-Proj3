@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
+import CharacterCard from './components/CharacterCard';
 import './App.css';
 
 
 function App() {
   const [search, setSearch] = useState('');
-
+  const [characters, setCharacters] = useState([]);
+  
   useEffect(() => {
   async function getCharacters() {
     const res = await fetch("https://rickandmortyapi.com/api/character");
     const data = await res.json();
-    console.log(data)
+    setCharacters(data.results);
+
   }
 
     getCharacters();
@@ -31,6 +34,19 @@ function App() {
           :
           <p>Start typing to search...</p>
       }
+      
+      <div className="character-grid">
+        {characters.map((character) => (
+          <CharacterCard
+            key={character.id}
+            name={character.name}
+            image={character.image}
+            species={character.species}
+            status={character.status}
+          />
+        ))}
+      </div>
+
     </div>
   );
 }
