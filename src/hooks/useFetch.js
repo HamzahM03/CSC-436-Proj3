@@ -4,6 +4,11 @@ function useFetch(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+
+  function retry (){
+    setRetryCount(prev => prev + 1);
+  }
 
   useEffect(() => {
     async function getData() {
@@ -31,12 +36,13 @@ function useFetch(url) {
     }
 
       getData();
-  }, [url]);
+  }, [url, retryCount]);
 
   return {
     data,
     loading,
     error,
+    retry
   };
 }
 
