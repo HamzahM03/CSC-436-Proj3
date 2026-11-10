@@ -6,17 +6,49 @@ import './App.css';
 function App() {
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
-  async function getCharacters() {
-    const res = await fetch("https://rickandmortyapi.com/api/character");
-    const data = await res.json();
-    setCharacters(data.results);
+    async function getCharacters() {
+      setLoading(true);
+      setError(null);
 
+      try {
+        const res = await fetch("https://rickandmortyapi.com/api/character");
+
+        if (!res.ok){
+          throw new Error("Failed to fetch characters.");
+        }
+
+        const data = await res.json();
+        setCharacters(data.results);
+
+      } catch (err){
+        setError(err.message);
+
+      } finally {
+        setLoading(false);
+
+      }
+      
+    }
+
+      getCharacters();
+  }, []);
+
+  const filteredCharacters = characters.filter((character) =>
+     character.name.toLowerCase().includes(search.trim().toLowerCase())
+  );
+
+    if (loading) {
+    return <p>Loading characters...</p>;
   }
 
-    getCharacters();
-  }, []);
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div>
       <h1>Character Explorer</h1>
@@ -34,9 +66,12 @@ function App() {
           :
           <p>Start typing to search...</p>
       }
-      
+
       <div className="character-grid">
-        {characters.map((character) => (
+        {filteredCharacters.length > 0 ? (
+
+        filteredCharacters.map((character) => (
+          
           <CharacterCard
             key={character.id}
             name={character.name}
@@ -44,7 +79,11 @@ function App() {
             species={character.species}
             status={character.status}
           />
-        ))}
+         
+        ))
+       ) :
+        <p>No characters found.</p>
+      }
       </div>
 
     </div>
