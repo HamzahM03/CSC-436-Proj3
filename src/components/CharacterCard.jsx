@@ -1,11 +1,14 @@
 function CharacterCard({ name, image, species, status }) {
+  // "Alive" -> "status-alive", so CSS can color each status differently
+  const statusClass = `status-${status.toLowerCase()}`;
+
   return (
-    <div className="character-card">
-      <img src={image} alt={name} />
+    <article className="character-card">
+      <img src={image} alt={name} width="300" height="300" />
       <h2>{name}</h2>
-      <p>{species}</p>
-      <p>Status: {status}</p>
-    </div>
+      <p className="character-species">{species}</p>
+      <span className={`status-badge ${statusClass}`}>Status: {status}</span>
+    </article>
   );
 }
 
